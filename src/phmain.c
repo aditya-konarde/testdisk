@@ -89,6 +89,7 @@
 #include "ntfs_dir.h"
 #include "pdiskseln.h"
 #include "dfxml.h"
+#include "phcli_auto.h"
 
 int need_to_stop=0;
 extern file_enable_t array_file_enable[];
@@ -125,9 +126,12 @@ static void display_help(void)
 {
   printf("\nUsage: photorec [/log] [/debug] [/d recup_dir] [file.dd|file.e01|device]\n"\
       "       photorec /version\n" \
+      "       photorec --auto [options] disk_or_image  (Non-interactive mode)\n" \
       "\n" \
       "/log          : create a photorec.log file\n" \
       "/debug        : add debug information\n" \
+      "\n" \
+      "For non-interactive mode, use: photorec --auto --help\n" \
       "\n" \
       "PhotoRec searches for various file formats (JPEG, Office...). It stores files\n" \
       "in the recup_dir directory.\n");
@@ -225,6 +229,16 @@ int main( int argc, char **argv )
   argc=4;
   argv=argv_framac;
 #endif
+  /* Check for non-interactive mode first */
+  for(i=1;i<argc;i++)
+  {
+    if(strcmp(argv[i], "--auto") == 0)
+    {
+      /* Switch to non-interactive mode */
+      return photorec_auto_mode(argc, argv, &options);
+    }
+  }
+  
   /*@ assert valid_list_disk(list_disk); */
   /*@
     @ loop unroll 256;
