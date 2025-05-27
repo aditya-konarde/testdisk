@@ -47,6 +47,7 @@
 #include "sessionp.h"
 #include "phrecn.h"
 #include "psearchn.h"
+#include "psearchn_headless.h"
 #include "pblocksize.h"
 #include "pfree_whole.h"
 #include "ppartseln.h"
@@ -425,7 +426,7 @@ int photorec_auto_mode(int argc, char **argv, struct ph_options *options)
         params_reset(&params, options);
         
         /* Run the recovery */
-        ind_stop = photorec_aux(&params, options, &list_search_space);
+        ind_stop = photorec_aux_headless(&params, options, &list_search_space);
         
         if (ind_stop != PSTATUS_OK) {
             log_error("Recovery stopped: %s\n", 
